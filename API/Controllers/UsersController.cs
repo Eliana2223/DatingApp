@@ -3,14 +3,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
 using API.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class UsersController : ControllerBase
+    //[ApiController]
+    //[Route("api/[controller]")] estos ya no los necesitamos porque hay un inheritage
+    //que hereda todas las propiedades de BaseApiController, y estos dos ya estan en esta última
+    public class UsersController : BaseApiController //inheritage
     {
         private readonly DataContext _context;
         public UsersController(DataContext context)
@@ -19,6 +21,7 @@ namespace API.Controllers
         }
         
         //api/users
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
         {
@@ -27,6 +30,7 @@ namespace API.Controllers
         }
       
         //api/users/3
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<AppUser>> GetUsers(int id)
         {
